@@ -1,1 +1,25 @@
-<p>sign-in works!</p>
+<h3>Sign In</h3>
+<form (ngSubmit)="onSubmit()" class="ui form" [formGroup]="form">
+  <app-input
+    inputType="text"
+    label="Username"
+    [control]="form.get('username')"
+  ></app-input>
+  <app-input
+    inputType="password"
+    label="Password"
+    [control]="form.get('password')"
+  ></app-input>
+
+  <div *ngIf="form.errors" class="ui red basic label">
+    <p *ngIf="form.errors.credentials">Invalid log in information</p>
+    <p *ngIf="form.errors.noConnection">
+      No connection available, failed to sign up
+    </p>
+    <p *ngIf="form.errors.unknownError">Unknown error, failed to sign up</p>
+  </div>
+
+  <div>
+    <button class="ui button primary">Submit</button>
+  </div>
+</form>
