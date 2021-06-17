@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,7 +37,6 @@ export class SignInComponent {
         const _ = this.router.navigateByUrl('/inbox');
       },
       error: ({ error, status }: HttpErrorResponse) => {
-        // invalid log in info
         if (error.username || error.password) {
           this.form.setErrors({ credentials: true });
         }

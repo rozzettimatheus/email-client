@@ -14,34 +14,13 @@ export class UniqueUsername implements AsyncValidator {
   validate = (control: FormControl): Observable<ValidationErrors> => {
     const { value: username } = control;
 
-    /**
-     * when the function was called, 'this' is undefined
-     * change function to arrow function
-     */
-    // console.log(this.http);
-
-    /**
-     * angular manages request cancellation
-     */
     return this.authService.usernameAvailable(username).pipe(
-      // map -> transform value
-      map(() => null), // if not error, return null (available:true)
+      map(() => null),
       catchError((err: HttpErrorResponse) => {
         return err.status
           ? of({ nonUniqueUsername: true })
           : of({ noConnection: true });
       })
-
-      /**
-       * long syntax
-       */
-      // catchError(
-      //   (err) =>
-      //     new Observable((observer) => {
-      //       observer.next({ nonUniqueUsername: true });
-      //       observer.complete();
-      //     })
-      // )
     );
   };
 }

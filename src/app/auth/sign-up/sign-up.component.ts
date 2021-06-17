@@ -25,7 +25,6 @@ export class SignUpComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup(
       {
-        // angular checks all sync validators, then the async ones
         username: new FormControl(
           '',
           [
@@ -59,12 +58,7 @@ export class SignUpComponent implements OnInit {
     }
 
     this.authService.signUp(this.form.value).subscribe({
-      // next() {
-      //   this => subscriber
-      // }
       next: ({ username }) => {
-        // this => SignupComponent (binded with arrow)
-        // Navigate to some other route
         const _ = this.router.navigateByUrl('/inbox');
       },
       error: (err: HttpErrorResponse) => {

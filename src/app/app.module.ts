@@ -18,7 +18,6 @@ import { AuthHttpInterceptor } from './auth/auth-http-interceptor';
     AuthModule,
   ],
   providers: [
-    // overrides dependency injection system, every request for http_intercep => provide authhttpint class
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

@@ -24,17 +24,20 @@ interface SignedInResponse {
   username: string;
 }
 
+interface SignInResponse {
+  username: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  signIn$ = new BehaviorSubject<boolean>(false);
+  signIn$ = new BehaviorSubject<boolean>(null);
+  username = '';
 
   private readonly rootURL = 'https://api.angular-email.com';
 
   constructor(private readonly http: HttpClient) {}
-
-  // Subject is hot => will emit values even there are not subscribers
 
   usernameAvailable(username: string) {
     return this.http.post<UsernameAvailableResponse>(
@@ -49,33 +52,31 @@ export class AuthService {
     return this.http
       .post<SignUpResponse>(`${this.rootURL}/auth/signup`, credentials)
       .pipe(
-        tap(() => {
-          // errors are skipped by 'tap' operator
+        tap(({ username }) => {
           this.signIn$.next(true);
+          this.username = username;
         })
       );
   }
 
   signIn(credentials: SignInCredentials) {
-    return this.http.post(`${this.rootURL}/auth/signin`, credentials).pipe(
-      // tap skip errors
-      tap(() => {
-        this.signIn$.next(true);
-      })
-    );
+    return this.http
+      .post<SignInResponse>(`${this.rootURL}/auth/signin`, credentials)
+      .pipe(
+        tap(({ username }) => {
+          this.signIn$.next(true);
+          this.username = username;
+        })
+      );
   }
 
   checkAuth() {
-    /**
-     * set-cookies -> lost when the page is refreshed (discarded)
-     *  -> fixing by adding a third param -> withCredentials: true
-     *  -> put that in a http interceptor
-     */
     return this.http
       .get<SignedInResponse>(`${this.rootURL}/auth/signedin`)
       .pipe(
-        tap(({ authenticated }) => {
+        tap(({ authenticated, username }) => {
           this.signIn$.next(authenticated);
+          this.username = username;
         })
       );
   }

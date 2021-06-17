@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { timeout } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-sign-out',
   templateUrl: './sign-out.component.html',
-  styleUrls: ['./sign-out.component.css'],
 })
 export class SignOutComponent implements OnInit {
   constructor(
@@ -14,10 +14,11 @@ export class SignOutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.signOut().subscribe(() => {
-      setTimeout(() => {
+    this.authService
+      .signOut()
+      .pipe(timeout(2000))
+      .subscribe(() => {
         const _ = this.router.navigateByUrl('/');
-      }, 2000);
-    });
+      });
   }
 }
